@@ -17,7 +17,18 @@ module.exports = {
     filename: 'bundle.[hash:4].js',
     path: path.resolve('dist') // 打包后的文件目录
   },
-  module: {},   // 处理对应模块
+  module: { // 处理对应模块
+    rules: [
+      {
+        test: /\.css$/, //解析css
+        // use: ['style-loader', 'css-loader'], // 从右向左解析
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader' },
+        ]
+      }
+    ]
+  },
   plugins: [ // 对应的插件
     // 打包前清空
     new CleanWebpackPlugin(),
