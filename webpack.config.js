@@ -3,6 +3,9 @@ const path = require('path')
 let HtmlWebpackPlugin = require('html-webpack-plugin');
 // 每次打包清空dist
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+
+// 拆分css样式的插件
+let ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = {
   // entry: ['./src/index.js', './src/login.js'],    // 入口文件,多入口文件可用数组，但是打包后悔合成一个
   // entry: { // 多入口文件，以对象形式，打包成多个文件
@@ -20,12 +23,11 @@ module.exports = {
   module: { // 处理对应模块
     rules: [
       {
-        test: /\.css$/, //解析css
-        // use: ['style-loader', 'css-loader'], // 从右向左解析
-        use: [
-          { loader: 'style-loader' },
-          { loader: 'css-loader' },
-        ]
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+          fallback: "style-loader",
+          use: "css-loader"
+        })
       }
     ]
   },
@@ -36,7 +38,8 @@ module.exports = {
       // 以index.html作为模板地址
       template: './src/index.html',
       hash: true, // 是否使用hash
-    })
+    }),
+    new ExtractTextPlugin('style.css')
   ],
   devServer: {},  // 开发服务器配置
   mode: 'development'  // 模式配置
